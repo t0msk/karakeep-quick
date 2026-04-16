@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export function Header({ view, onBack, searchValue, onSearchChange, isSearching }: HeaderProps) {
     return (
-        <div className="shrink-0 p-4 m-4 border-b border-[var(--border-subtle)]">
+        <div className="shrink-0 p-4 m-8 border-b border-[var(--border-subtle)]">
             {view === 'settings' ? (
                 /* ── Settings header ── */
                 <div className="flex items-center gap-2 px-3 py-2.5">
@@ -36,7 +36,7 @@ export function Header({ view, onBack, searchValue, onSearchChange, isSearching 
                 </div>
             ) : (
                 /* ── Search header ── */
-                <div className="m-4 px-3 pt-3 pb-2.5">
+                <div className="px-3 pt-8 pb-2.5">
                     <div className="flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-2.5 transition-all duration-150 focus-within:border-[var(--border-strong)] focus-within:shadow-[0_0_0_3px_var(--accent-glow)]">
                         <span className="text-(--text-tertiary) flex items-center shrink-0">
                             {isSearching ? (
