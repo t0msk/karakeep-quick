@@ -1,0 +1,7 @@
+/* Minimal popup overrides — hover states already handled via Tailwind group/hover */
+input::placeholder {
+    color: var(--text-tertiary);
+}
+input:focus {
+    outline: none;
+}
