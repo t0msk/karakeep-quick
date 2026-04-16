@@ -98,10 +98,11 @@ export default function App() {
 
     return (
         <div
-            className="flex flex-col bg-[var(--bg-base)] overflow-hidden"
+            className="flex flex-col bg-[var(--bg-base)] overflow-hidden relative" // pridaj relative
             style={{
                 width: 'var(--popup-width)',
                 height: 'var(--popup-height)',
+                maxHeight: 'var(--popup-height)', // vynútiť maximum
             }}
         >
             {/* Header — switches between search bar and settings back-button */}
@@ -114,10 +115,10 @@ export default function App() {
             />
 
             {/* Main scrollable content */}
-            <main className="flex-1 overflow-y-auto overflow-x-hidden">
+            <main className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden">
                 {/* ── Setup prompt (no credentials yet) ── */}
                 {view === 'setup' && (
-                    <div className="flex flex-col items-center justify-center gap-3 h-full px-7 py-8 text-center fade-in">
+                    <div className="flex flex-col items-center justify-center gap-3 flex-1 px-7 py-8 text-center fade-in">
                         <div className="w-14 h-14 bg-[var(--accent-dim)] border border-[var(--accent-border)] rounded-[14px] flex items-center justify-center mb-1">
                             <svg
                                 width="32"
@@ -148,7 +149,7 @@ export default function App() {
 
                 {/* ── Initial loading spinner ── */}
                 {view === 'loading' && (
-                    <div className="flex items-center justify-center h-full">
+                    <div className="flex flex-col items-center justify-center gap-3 flex-1 px-7 py-8 text-center fade-in">
                         <svg
                             width="20"
                             height="20"
@@ -201,7 +202,7 @@ export default function App() {
             </main>
 
             {/* Footer — hide settings button when already on settings */}
-            <Footer onSettings={openSettings} showSettings={!isSettings} />
+            <Footer settings={settings} onSettings={openSettings} showSettings={!isSettings} />
         </div>
     );
 }
