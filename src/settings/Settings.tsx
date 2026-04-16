@@ -291,7 +291,7 @@ export default function Settings() {
 
                 <footer className="pt-2 text-center">
                     <span className="text-[11.5px] text-[var(--text-tertiary)] font-mono">
-                        Karakeep Extension v1.0.0
+                        Karakeep Quick Extension v1.0.0
                     </span>
                 </footer>
             </div>

@@ -121,7 +121,7 @@ function CategoryNode({
                     )}
                 </span>
 
-                <span className="flex-1 truncate">{list.name}</span>
+                <span className="flex-1 text-lg font-bold truncate">{list.name}</span>
             </button>
 
             {state.open && (

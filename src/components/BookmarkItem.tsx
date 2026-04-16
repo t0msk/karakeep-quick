@@ -43,12 +43,12 @@ export function BookmarkItem({ bookmark, indentPx = 12 }: BookmarkItemProps) {
             style={{ paddingLeft: indentPx }}
             className="bookmark-item group flex items-center gap-2.5 pr-3 py-2 w-full text-left border-none bg-transparent hover:bg-[var(--bg-hover)] transition-colors duration-150 cursor-pointer"
         >
-            <div className="w-24 h-6 flex items-center justify-center bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[6px] shrink-0">
+            <div className="w-8 h-8 flex items-center justify-center bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[6px] shrink-0">
                 {favicon ? (
                     <img
                         src={favicon}
-                        width={14}
-                        height={14}
+                        width={20}
+                        height={20}
                         alt=""
                         className="rounded-sm object-contain"
                         onError={(e) => {
@@ -78,10 +78,10 @@ export function BookmarkItem({ bookmark, indentPx = 12 }: BookmarkItemProps) {
             </div>
 
             <div className="flex-1 flex flex-col gap-0.5 min-w-0 overflow-hidden">
-                <span className="text-[12.5px] text-red font-medium text-[var(--text-primary)] truncate leading-[1.4]">
+                <span className="text-red font-medium text-[var(--text-primary)] truncate leading-[1.4]">
                     {title}
                 </span>
-                <span className="text-[11px] text-[var(--text-tertiary)] truncate font-mono leading-[1.3]">
+                <span className="text-[var(--text-tertiary)] truncate font-mono leading-[1.3]">
                     {hostname}
                 </span>
             </div>

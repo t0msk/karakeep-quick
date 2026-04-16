@@ -5,7 +5,7 @@ interface FooterProps {
 
 export function Footer({ onSettings, showSettings = true }: FooterProps) {
     return (
-        <footer className="flex items-center justify-between px-2.5 py-[7px] pl-3 border-t border-[var(--border-subtle)] shrink-0 bg-[var(--bg-surface)]">
+        <footer className="fixed bottom-0 w-full z-50 flex items-center justify-between px-2.5 py-[7px] pl-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
             <div className="flex items-center gap-1.5 opacity-50">
                 <svg
                     width="13"

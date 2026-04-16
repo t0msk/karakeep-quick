@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* ─── THEME TOKENS ───────────────────────────────────────────────
+   Only values that extend or override Tailwind's default theme.
+   Using unique names (--font-display-*, --radius-*) avoids
+   collisions with Tailwind's built-in namespace.
+────────────────────────────────────────────────────────────────── */
 @theme {
     --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'DM Mono', 'Fira Code', monospace;
@@ -14,191 +16,200 @@
 
     --animate-shimmer: shimmer 1.4s infinite;
     --animate-fade-in: fadeIn 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+    /* Expose our semantic design tokens as Tailwind theme values
+     so they work with utilities: bg-background, text-foreground etc. */
+    --color-background: #0c0c0e;
+    --color-surface: #131316;
+    --color-elevated: #1a1a1f;
 }
 
-/* ─── DARK THEME (default) ──────────────────────────────────────── */
-:root {
-    --bg-base: #0c0c0e;
-    --bg-surface: #131316;
-    --bg-elevated: #1a1a1f;
-    --bg-hover: #424253;
-    --bg-active: #252530;
-
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-default: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.22);
-
-    --text-primary: #e9e9e9;
-    --text-secondary: #a6a4b0;
-    --text-tertiary: #9f9f9f;
-
-    --accent: #f59e0b;
-    --text-accent: #f59e0b;
-    --text-accent-soft: rgba(245, 158, 11, 0.75);
-    --accent-glow: rgba(245, 158, 11, 0.15);
-    --accent-dim: rgba(245, 158, 11, 0.08);
-    --accent-text-on: #0c0c0e;
-
-    --color-error: #f87171;
-    --color-success: #4ade80;
-    --red: #f87171;
-    --green: #4ade80;
-
-    --error-bg: rgba(248, 113, 113, 0.08);
-    --error-border: rgba(248, 113, 113, 0.2);
-    --success-bg: rgba(74, 222, 128, 0.08);
-    --success-border: rgba(74, 222, 128, 0.2);
-    --accent-border: rgba(245, 158, 11, 0.2);
-
-    --skeleton-from: #1a1a1f;
-    --skeleton-mid: #202028;
-
-    --scrollbar-thumb: rgba(255, 255, 255, 0.1);
-    --scrollbar-hover: rgba(255, 255, 255, 0.18);
-
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-
-    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'DM Mono', 'Fira Code', monospace;
-
-    --popup-width: 450px;
-    --popup-height: 650px;
-    --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ─── LIGHT THEME ───────────────────────────────────────────────── */
-@media (prefers-color-scheme: light) {
+/* ─── DESIGN SYSTEM VARIABLES ───────────────────────────────────
+   Semantic CSS custom properties for both themes.
+   Placed in @layer base so Tailwind utilities can override them.
+────────────────────────────────────────────────────────────────── */
+@layer base {
+    /* ── Dark theme (default) ── */
     :root {
-        --bg-base: #f5f4f0;
-        --bg-surface: #ffffff;
-        --bg-elevated: #ebebeb;
-        --bg-hover: #e4e3df;
-        --bg-active: #d9d8d3;
+        --bg-base: #0c0c0e;
+        --bg-surface: #131316;
+        --bg-elevated: #1a1a1f;
+        --bg-hover: #202028;
+        --bg-active: #252530;
 
-        --border-subtle: rgba(0, 0, 0, 0.06);
-        --border-default: rgba(0, 0, 0, 0.11);
-        --border-strong: rgba(0, 0, 0, 0.22);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --border-default: rgba(255, 255, 255, 0.1);
+        --border-strong: rgba(255, 255, 255, 0.22);
 
-        --text-primary: #1a1916;
-        --text-secondary: #56544e;
-        --text-tertiary: #9e9c96;
+        --text-primary: #f0eee8;
+        --text-secondary: #9896a0;
+        --text-tertiary: #5e5c68;
+        --accent: #f59e0b;
+        --text-accent: #f59e0b;
+        --text-accent-soft: rgba(245, 158, 11, 0.75);
+        --accent-glow: rgba(245, 158, 11, 0.15);
+        --accent-dim: rgba(245, 158, 11, 0.08);
+        --accent-border: rgba(245, 158, 11, 0.2);
+        --accent-text-on: #0c0c0e;
 
-        --accent: #d97706;
-        --text-accent: #d97706;
-        --text-accent-soft: rgba(217, 119, 6, 0.75);
-        --accent-glow: rgba(217, 119, 6, 0.12);
-        --accent-dim: rgba(217, 119, 6, 0.07);
-        --accent-text-on: #ffffff;
+        --color-error: #f87171;
+        --color-success: #4ade80;
+        --red: #f87171;
+        --green: #4ade80;
 
-        --color-error: #dc2626;
-        --color-success: #16a34a;
-        --red: #dc2626;
-        --green: #16a34a;
+        --error-bg: rgba(248, 113, 113, 0.08);
+        --error-border: rgba(248, 113, 113, 0.2);
+        --success-bg: rgba(74, 222, 128, 0.08);
+        --success-border: rgba(74, 222, 128, 0.2);
 
-        --skeleton-from: #e8e7e3;
-        --skeleton-mid: #dddcd8;
+        --skeleton-from: #1a1a1f;
+        --skeleton-mid: #202028;
+        --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+        --scrollbar-hover: rgba(255, 255, 255, 0.18);
 
-        --error-bg: rgba(220, 38, 38, 0.07);
-        --error-border: rgba(220, 38, 38, 0.18);
-        --success-bg: rgba(22, 163, 74, 0.07);
-        --success-border: rgba(22, 163, 74, 0.18);
-        --accent-border: rgba(217, 119, 6, 0.22);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
 
-        --scrollbar-thumb: rgba(0, 0, 0, 0.12);
-        --scrollbar-hover: rgba(0, 0, 0, 0.22);
+        --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-mono: 'DM Mono', 'Fira Code', monospace;
+
+        --popup-width: 500px;
+        --popup-height: 700px;
+        --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Light theme ── */
+    @media (prefers-color-scheme: light) {
+        :root {
+            --bg-base: #f5f4f0;
+            --bg-surface: #ffffff;
+            --bg-elevated: #ebebeb;
+            --bg-hover: #e4e3df;
+            --bg-active: #d9d8d3;
+
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-default: rgba(0, 0, 0, 0.11);
+            --border-strong: rgba(0, 0, 0, 0.22);
+
+            --text-primary: #1a1916;
+            --text-secondary: #56544e;
+            --text-tertiary: #9e9c96;
+            --accent: #d97706;
+            --text-accent: #d97706;
+            --text-accent-soft: rgba(217, 119, 6, 0.75);
+            --accent-glow: rgba(217, 119, 6, 0.12);
+            --accent-dim: rgba(217, 119, 6, 0.07);
+            --accent-border: rgba(217, 119, 6, 0.22);
+            --accent-text-on: #ffffff;
+
+            --color-error: #dc2626;
+            --color-success: #16a34a;
+            --red: #dc2626;
+            --green: #16a34a;
+
+            --error-bg: rgba(220, 38, 38, 0.07);
+            --error-border: rgba(220, 38, 38, 0.18);
+            --success-bg: rgba(22, 163, 74, 0.07);
+            --success-border: rgba(22, 163, 74, 0.18);
+
+            --skeleton-from: #e8e7e3;
+            --skeleton-mid: #dddcd8;
+            --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+            --scrollbar-hover: rgba(0, 0, 0, 0.22);
+        }
+    }
+
+    /* ── Popup shell sizing ── */
+    html,
+    body,
+    #root {
+        width: var(--popup-width);
+        height: var(--popup-height);
+        overflow: hidden;
+        background: var(--bg-base);
+        font-family: var(--font-sans);
+        color: var(--text-primary);
+        font-size: 13px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    body.settings-page,
+    body.settings-page #root {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    /* ── Minimal element resets
+     (Tailwind preflight already handles the heavy lifting) ── */
+    button {
+        font-family: var(--font-sans);
+        cursor: pointer;
+    }
+
+    input {
+        font-family: var(--font-sans);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border-radius: 99px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-hover);
+    }
+
+    /* ── Keyframes ── */
+    @keyframes shimmer {
+        0% {
+            background-position: -400px 0;
+        }
+        100% {
+            background-position: 400px 0;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 }
 
-/* ─── BASE ──────────────────────────────────────────────────────── */
-html,
-body,
-#root {
-    width: var(--popup-width);
-    height: var(--popup-height);
-    overflow: hidden;
-    background: var(--bg-base);
-    font-family: var(--font-sans);
-    color: var(--text-primary);
-    font-size: 13px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-}
-
-body.settings-page,
-body.settings-page #root {
-    width: 100%;
-    height: auto;
-    min-height: 100vh;
-    overflow: auto;
-}
-
-button {
-    font-family: var(--font-sans);
-    cursor: pointer;
-    border: none;
-    background: none;
-    color: inherit;
-}
-a {
-    color: inherit;
-    text-decoration: none;
-}
-input {
-    font-family: var(--font-sans);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 99px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-hover);
-}
-
-/* ─── KEYFRAMES ─────────────────────────────────────────────────── */
-@keyframes shimmer {
-    0% {
-        background-position: -400px 0;
+/* ─── COMPONENT UTILITIES ────────────────────────────────────────
+   In @layer utilities so they can be overridden by Tailwind's own
+   utility classes when needed.
+────────────────────────────────────────────────────────────────── */
+@layer utilities {
+    .skeleton {
+        background: linear-gradient(
+            90deg,
+            var(--skeleton-from) 25%,
+            var(--skeleton-mid) 50%,
+            var(--skeleton-from) 75%
+        );
+        background-size: 800px 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: var(--radius-sm);
     }
-    100% {
-        background-position: 400px 0;
-    }
-}
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
+    .fade-in {
+        animation: fadeIn 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ─── UTILITY CLASSES ───────────────────────────────────────────── */
-.skeleton {
-    background: linear-gradient(
-        90deg,
-        var(--skeleton-from) 25%,
-        var(--skeleton-mid) 50%,
-        var(--skeleton-from) 75%
-    );
-    background-size: 800px 100%;
-    animation: shimmer 1.4s infinite;
-    border-radius: var(--radius-sm);
-}
-
-.fade-in {
-    animation: fadeIn 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
