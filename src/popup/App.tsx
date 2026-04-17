@@ -112,6 +112,8 @@ export default function App() {
                 searchValue={query}
                 onSearchChange={setQuery}
                 isSearching={searchLoading}
+                onReload={() => loadLists(settings)}
+                isReloading={listsLoading}
             />
 
             {/* Main scrollable content */}

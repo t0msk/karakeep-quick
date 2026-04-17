@@ -1,5 +1,7 @@
 import type { KarakeepSettings, BookmarkListResponse, ListsResponse, KarakeepList } from '@/types';
 
+// ─── Storage ──────────────────────────────────────────────────────
+
 export async function getSettings(): Promise<KarakeepSettings> {
     return new Promise((resolve) => {
         chrome.storage.local.get(['apiUrl', 'apiKey'], (result) => {
@@ -16,6 +18,8 @@ export async function saveSettings(settings: KarakeepSettings): Promise<void> {
         chrome.storage.local.set(settings, resolve);
     });
 }
+
+// ─── Core fetch helper ────────────────────────────────────────────
 
 async function apiFetch<T>(
     settings: KarakeepSettings,
@@ -43,6 +47,8 @@ async function apiFetch<T>(
     return res.json() as Promise<T>;
 }
 
+// ─── Lists ────────────────────────────────────────────────────────
+
 export async function fetchLists(settings: KarakeepSettings): Promise<KarakeepList[]> {
     const data = await apiFetch<ListsResponse>(settings, '/lists');
     const lists = data.lists ?? [];
@@ -63,22 +69,34 @@ export async function fetchLists(settings: KarakeepSettings): Promise<KarakeepLi
     return roots;
 }
 
+// ─── Bookmarks by list ────────────────────────────────────────────
+
 export async function fetchBookmarksByList(
     settings: KarakeepSettings,
     listId: string,
     cursor?: string,
 ): Promise<BookmarkListResponse> {
-    const params: Record<string, string> = { listId, limit: '100' };
+    const params: Record<string, string> = { limit: '50' };
     if (cursor) params.cursor = cursor;
-    return apiFetch<BookmarkListResponse>(settings, '/bookmarks', params);
+    return apiFetch<BookmarkListResponse>(
+        settings,
+        `/lists/${encodeURIComponent(listId)}/bookmarks`,
+        params,
+    );
 }
+
+// ─── Search ───────────────────────────────────────────────────────
 
 export async function searchBookmarks(
     settings: KarakeepSettings,
     query: string,
+    cursor?: string,
 ): Promise<BookmarkListResponse> {
-    return apiFetch<BookmarkListResponse>(settings, '/bookmarks', {
+    const params: Record<string, string> = {
         q: query,
         limit: '30',
-    });
+        sortOrder: 'relevance',
+    };
+    if (cursor) params.cursor = cursor;
+    return apiFetch<BookmarkListResponse>(settings, '/bookmarks/search', params);
 }

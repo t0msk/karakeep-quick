@@ -4,9 +4,19 @@ interface HeaderProps {
     searchValue: string;
     onSearchChange: (v: string) => void;
     isSearching: boolean;
+    onReload?: () => void;
+    isReloading?: boolean;
 }
 
-export function Header({ view, onBack, searchValue, onSearchChange, isSearching }: HeaderProps) {
+export function Header({
+    view,
+    onBack,
+    searchValue,
+    onSearchChange,
+    isSearching,
+    onReload,
+    isReloading,
+}: HeaderProps) {
     return (
         <div className="shrink-0 m-3 mt-4 border-b border-[var(--border-subtle)]">
             {view === 'settings' ? (
@@ -36,8 +46,8 @@ export function Header({ view, onBack, searchValue, onSearchChange, isSearching 
                 </div>
             ) : (
                 /* ── Search header ── */
-                <div className="px-3 pb-2.5">
-                    <div className="flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-2.5 transition-all duration-150 focus-within:border-[var(--border-strong)] focus-within:shadow-[0_0_0_3px_var(--accent-glow)]">
+                <div className="px-3 pb-2.5 flex items-center gap-2">
+                    <div className="flex-1 flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-2.5 transition-all duration-150 focus-within:border-[var(--border-strong)] focus-within:shadow-[0_0_0_3px_var(--accent-glow)]">
                         <span className="text-(--text-tertiary) flex items-center shrink-0">
                             {isSearching ? (
                                 <svg
@@ -104,6 +114,35 @@ export function Header({ view, onBack, searchValue, onSearchChange, isSearching 
                             </button>
                         )}
                     </div>
+                    {onReload && (
+                        <button
+                            onClick={onReload}
+                            disabled={isReloading}
+                            title="Reload lists"
+                            className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-[var(--text-tertiary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)] disabled:opacity-40 active:scale-95 transition-all duration-150 shrink-0"
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={
+                                    isReloading
+                                        ? { animation: 'spin 0.7s linear infinite' }
+                                        : undefined
+                                }
+                            >
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                                <path d="M21 3v5h-5" />
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                                <path d="M8 16H3v5" />
+                            </svg>
+                        </button>
+                    )}
                 </div>
             )}
         </div>

@@ -8,7 +8,7 @@ interface FooterProps {
 
 export function Footer({ onSettings, showSettings = true, settings }: FooterProps) {
     return (
-        <footer className="fixed bottom-0 w-full z-50 flex items-center justify-between px-2.5 py-[7px] pl-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+        <footer className="shrink-0 flex items-center justify-between px-2.5 py-[7px] pl-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
             <FooterBtn
                 onClick={() =>
                     chrome.tabs.create({
