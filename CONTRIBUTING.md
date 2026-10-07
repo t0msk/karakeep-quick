@@ -26,12 +26,15 @@ If this is your first time contributing:
     git remote add upstream https://github.com/t0msk/karakeep-quick.git
     ```
 
-4. **Install dependencies** and generate the extension icons:
+4. **Install dependencies:**
 
     ```bash
     npm install
-    python3 generate_icons.py
     ```
+
+    Icons are already committed under `public/icons/`. Only regenerate them
+    (e.g. after editing `generate_icons.py`) with `python3 generate_icons.py`,
+    which requires [Pillow](https://pillow.readthedocs.io) (`pip install pillow`).
 
 5. **Start the development build watcher:**
 

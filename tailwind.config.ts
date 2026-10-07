@@ -6,7 +6,6 @@ const config: Config = {
         './src/**/*.tsx',
         './src/**/*.ts',
         './popup.html',
-        './settings.html',
     ],
     theme: {
         extend: {},

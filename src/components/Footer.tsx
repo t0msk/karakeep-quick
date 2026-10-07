@@ -1,4 +1,4 @@
-import { KarakeepSettings } from '@/types';
+import type { KarakeepSettings } from '@/types';
 
 interface FooterProps {
     onSettings: () => void;
@@ -66,7 +66,6 @@ export function Footer({ onSettings, showSettings = true, settings }: FooterProp
                     GitHub
                 </FooterBtn>
 
-                {/* Pridaná vlastnosť highlight={true} pre Support tlačidlo */}
                 <FooterBtn
                     onClick={() =>
                         chrome.tabs.create({
@@ -103,18 +102,16 @@ function FooterBtn({
     onClick,
     title,
     children,
-    highlight = false, // Nová voliteľná vlastnosť
+    highlight = false,
 }: {
     onClick: () => void;
     title: string;
     children: React.ReactNode;
     highlight?: boolean;
 }) {
-    // Rozdelil som triedy na spoločné a dynamické pre lepšiu čitateľnosť
     const baseClasses =
         'flex items-center justify-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-[var(--radius-sm)] border border-transparent bg-transparent active:scale-95 transition-all duration-150 cursor-pointer';
 
-    // Ak je highlight true, použije sa lososová farba, inak štandardná
     const colorClasses = highlight
         ? 'text-[#fc8d7e] hover:border-[#fc8d7e] hover:bg-[#fc8d7e]/10'
         : 'text-[var(--text-tertiary)] hover:border-[var(--text-secondary)] hover:text-[var(--text-secondary)]';

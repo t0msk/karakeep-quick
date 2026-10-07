@@ -12,7 +12,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-[Install](#-installation) · [Features](#-features) · [Build from source](#-build-from-source) · [Roadmap](#-roadmap) · [Contribute](#-contributing) · [Support](#-support)
+[Install](#-installation) · [Features](#-features) · [Build from source](#-build-from-source) · [Roadmap](#-roadmap) · [Contribute](#-contributing) · [Publish](DEPLOYMENT.md) · [Privacy](PRIVACY.md) · [Support](#-support)
 
 ![Screenshot placeholder](https://placehold.co/760x440/0c0c0e/f59e0b?text=Karakeep+Quick&font=montserrat)
 
@@ -22,13 +22,17 @@
 
 ## ✨ Features
 
-- 🔍 **Instant search** — debounced full-text search across all your bookmarks as you type
+- 🔍 **Instant search** — debounced, paginated full-text search across all your bookmarks as you type, with a title-substring fallback so recently renamed bookmarks are always found
 - 📁 **Nested list browser** — lazy-loaded category tree with support for unlimited nesting depth
 - 🌓 **Automatic light/dark theme** — follows your OS preference via `prefers-color-scheme`, no toggle needed
 - ⚡ **One-click open** — click any bookmark to open it in a new tab
+- 💾 **Save the current tab** — one click in the toolbar popup bookmarks the page you're on
+- ⌨️ **Keyboard navigation** — move through lists and search results with ↑ ↓ Home End
+- 🖼 **Favicon fallback** — falls back to a favicon service when Karakeep has none cached
 - 🔒 **Self-hosted first** — connects directly to your own Karakeep instance via the REST API
+- 🔐 **Minimal permissions** — host access is requested only for the instance URL you configure, not `<all_urls>`
 - ⚙️ **In-popup settings** — configure API URL and key, test the connection, all without leaving the popup
-- 📦 **No external dependencies at runtime** — pure Chrome storage, no telemetry, no third-party services
+- 📦 **No telemetry** — pure Chrome storage, no analytics, no tracking
 
 ---
 
@@ -63,6 +67,7 @@ See [Build from source](#-build-from-source) below.
 
 - [Node.js](https://nodejs.org) 18 or later
 - npm (comes with Node.js)
+- Python 3 with [Pillow](https://pillow.readthedocs.io) (`pip install pillow`) — only needed if you want to regenerate the icons
 - A running [Karakeep](https://karakeep.app) instance
 
 ### Steps
@@ -75,7 +80,7 @@ cd karakeep-quick
 # 2. Install dependencies
 npm install
 
-# 3. Generate extension icons
+# 3. (Optional) Regenerate extension icons — pre-built ones are already committed
 python3 generate_icons.py
 
 # 4. Build
@@ -92,6 +97,13 @@ npm run dev
 
 Vite will watch for file changes and rebuild automatically. After each rebuild, go to `chrome://extensions` and click the **↺ refresh** button on the Karakeep Quick card to pick up changes.
 
+### Quality checks
+
+```bash
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint .
+```
+
 ### Project structure
 
 ```
@@ -101,24 +113,23 @@ karakeep-quick/
 │   └── manifest.json     # Chrome Extension manifest (MV3)
 ├── src/
 │   ├── api/
-│   │   └── karakeep.ts   # Karakeep REST API client + chrome.storage helpers
+│   │   └── karakeep.ts   # Karakeep REST API client + chrome.storage + permission helpers
 │   ├── components/
-│   │   ├── BookmarkItem.tsx    # Single bookmark row with favicon
+│   │   ├── BookmarkItem.tsx    # Single bookmark row with favicon (+ fallback)
 │   │   ├── CategoryTree.tsx    # Recursive list tree with lazy-loaded bookmarks
+│   │   ├── ErrorBoundary.tsx   # Top-level React error boundary
 │   │   ├── Footer.tsx          # Footer with settings / GitHub / Ko-fi buttons
-│   │   ├── Header.tsx          # Unified header — search bar or settings back-button
-│   │   ├── SearchResults.tsx   # Search results list
+│   │   ├── Header.tsx          # Unified header — search bar, save-tab, or settings back-button
+│   │   ├── SearchResults.tsx   # Paginated search results list
 │   │   └── SettingsPanel.tsx   # Inline settings form
 │   ├── popup/
 │   │   └── App.tsx       # Root popup component & view state machine
-│   ├── settings/
-│   │   └── Settings.tsx  # Standalone options page (fallback)
 │   ├── styles/
 │   │   └── globals.css   # Tailwind v4 @theme tokens + light/dark themes
 │   └── types/
 │       └── index.ts      # TypeScript types for Karakeep API responses
+├── eslint.config.js
 ├── popup.html
-├── settings.html
 ├── vite.config.ts
 └── tsconfig.json
 ```
@@ -131,10 +142,10 @@ The extension is functional but there is plenty left to build. Community contrib
 
 ### v1.1 — Usability
 
-- [ ] Add bookmark directly from the active tab (one-click save)
-- [ ] Keyboard navigation through search results and lists (↑ ↓ Enter)
+- [x] Add bookmark directly from the active tab (one-click save)
+- [x] Keyboard navigation through search results and lists (↑ ↓ Home/End)
 - [ ] Show bookmark tags alongside list membership
-- [ ] Favicon fallback using Google/DuckDuckGo favicon services
+- [x] Favicon fallback using Google's favicon service
 
 ### v1.2 — Power features
 
@@ -166,6 +177,12 @@ Contributions are warmly welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for 
 
 ---
 
+## 📦 Publishing
+
+Maintainers publishing a new version to the Chrome Web Store should follow [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
+
 ## ☕ Support
 
 Karakeep Quick is free and open-source. If you find it useful, you can support the project on **Ko-fi**:
@@ -177,6 +194,8 @@ Karakeep Quick is free and open-source. If you find it useful, you can support t
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+See [PRIVACY.md](PRIVACY.md) for what data the extension stores and transmits.
 
 ---
 

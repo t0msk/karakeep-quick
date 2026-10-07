@@ -6,22 +6,29 @@
     "scripts": {
         "dev": "vite build --watch",
         "build": "vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint ."
     },
     "dependencies": {
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@tailwindcss/vite": "^4.2.2",
         "@types/chrome": "^0.0.268",
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "@vitejs/plugin-react": "^4.3.1",
-        "tailwindcss": "^4.2.2",
-        "postcss": "^8.5.3",
         "autoprefixer": "^10.4.21",
+        "eslint": "^10.12.0",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "globals": "^17.13.0",
+        "postcss": "^8.5.3",
+        "tailwindcss": "^4.2.2",
         "typescript": "^5.5.3",
+        "typescript-eslint": "^8.71.1",
         "vite": "^5.3.4"
     }
 }

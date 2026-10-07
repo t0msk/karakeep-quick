@@ -75,7 +75,6 @@
         --font-mono: 'DM Mono', 'Fira Code', monospace;
 
         --popup-width: 500px;
-        --popup-height: 700px;
         --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSettings, saveSettings, fetchLists } from '@/api/karakeep';
+import { getSettings, saveSettings, requestHostPermission } from '@/api/karakeep';
 import type { KarakeepSettings } from '@/types';
 
 interface SettingsPanelProps {
@@ -36,6 +36,11 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
             setError('Enter a valid URL (e.g. https://karakeep.example.com)');
             return;
         }
+        const granted = await requestHostPermission(url);
+        if (!granted) {
+            setError('Permission to access this host was denied. Allow it to connect.');
+            return;
+        }
         setError(null);
         const newSettings = { apiUrl: url, apiKey: key, adaptiveHeight };
         await saveSettings(newSettings);
@@ -53,6 +58,11 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
         setTesting(true);
         setTestResult(null);
         try {
+            const granted = await requestHostPermission(url);
+            if (!granted) {
+                setTestResult('fail');
+                return;
+            }
             const res = await fetch(`${url.replace(/\/$/, '')}/api/v1/lists`, {
                 headers: { Authorization: `Bearer ${key}` },
             });
@@ -276,47 +286,6 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
             </div>
 
             <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-            <div className="px-4 pt-3 pb-3 flex flex-col gap-2">
-                <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-[var(--text-tertiary)]">
-                    Links
-                </p>
-                <div className="flex flex-col gap-0.5 -mx-1">
-                    <LinkRow
-                        href="https://github.com/nichochar/karakeep"
-                        label="GitHub"
-                        sublabel="Source code & issues"
-                        icon={
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-                            </svg>
-                        }
-                    />
-                    <LinkRow
-                        href="https://ko-fi.com"
-                        label="Ko-fi"
-                        sublabel="Support development"
-                        icon={
-                            <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                            >
-                                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                                <line x1="6" y1="1" x2="6" y2="4" />
-                                <line x1="10" y1="1" x2="10" y2="4" />
-                                <line x1="14" y1="1" x2="14" y2="4" />
-                            </svg>
-                        }
-                    />
-                </div>
-            </div>
-
-            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
             <div className="px-4 py-3 text-center">
                 <span className="text-[11px] text-[var(--text-tertiary)] font-mono">
@@ -324,52 +293,5 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
                 </span>
             </div>
         </div>
-    );
-}
-
-function LinkRow({
-    href,
-    icon,
-    label,
-    sublabel,
-}: {
-    href: string;
-    icon: React.ReactNode;
-    label: string;
-    sublabel: string;
-}) {
-    return (
-        <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-                e.preventDefault();
-                chrome.tabs.create({ url: href, active: true });
-            }}
-            className="flex items-center gap-2.5 px-2 py-2 rounded-[var(--radius-sm)] hover:bg-[var(--bg-hover)] transition-colors duration-150 cursor-pointer"
-        >
-            <span className="text-[var(--text-secondary)] flex items-center w-4 shrink-0">
-                {icon}
-            </span>
-            <span className="flex-1 flex flex-col gap-0.5">
-                <span className="text-[12.5px] font-medium text-[var(--text-primary)]">
-                    {label}
-                </span>
-                <span className="text-[11px] text-[var(--text-tertiary)]">{sublabel}</span>
-            </span>
-            <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                className="text-[var(--text-tertiary)] shrink-0"
-            >
-                <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-        </a>
     );
 }

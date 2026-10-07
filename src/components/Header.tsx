@@ -3,9 +3,12 @@ interface HeaderProps {
     onBack: () => void;
     searchValue: string;
     onSearchChange: (v: string) => void;
+    onSearchKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     isSearching: boolean;
     onReload?: () => void;
     isReloading?: boolean;
+    onSaveTab?: () => void;
+    saveTabStatus?: 'idle' | 'saving' | 'done' | 'error';
 }
 
 export function Header({
@@ -13,9 +16,12 @@ export function Header({
     onBack,
     searchValue,
     onSearchChange,
+    onSearchKeyDown,
     isSearching,
     onReload,
     isReloading,
+    onSaveTab,
+    saveTabStatus = 'idle',
 }: HeaderProps) {
     return (
         <div className="shrink-0 m-3 mt-4 border-b border-[var(--border-subtle)]">
@@ -91,6 +97,7 @@ export function Header({
                             placeholder="Search bookmarks…"
                             value={searchValue}
                             onChange={(e) => onSearchChange(e.target.value)}
+                            onKeyDown={onSearchKeyDown}
                             spellCheck={false}
                             autoComplete="off"
                             autoFocus
@@ -114,6 +121,76 @@ export function Header({
                             </button>
                         )}
                     </div>
+                    {onSaveTab && (
+                        <button
+                            onClick={onSaveTab}
+                            disabled={saveTabStatus === 'saving'}
+                            title={
+                                saveTabStatus === 'done'
+                                    ? 'Saved!'
+                                    : saveTabStatus === 'error'
+                                      ? 'Failed to save'
+                                      : 'Save current tab'
+                            }
+                            className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-[var(--text-tertiary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)] disabled:opacity-40 active:scale-95 transition-all duration-150 shrink-0"
+                        >
+                            {saveTabStatus === 'done' ? (
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="var(--color-success)"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            ) : saveTabStatus === 'error' ? (
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="var(--color-error)"
+                                    strokeWidth="2.2"
+                                    strokeLinecap="round"
+                                >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 8v4M12 16h.01" />
+                                </svg>
+                            ) : (
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    style={
+                                        saveTabStatus === 'saving'
+                                            ? { animation: 'spin 0.7s linear infinite' }
+                                            : undefined
+                                    }
+                                >
+                                    {saveTabStatus === 'saving' ? (
+                                        <>
+                                            <circle cx="12" cy="12" r="9" strokeOpacity="0.3" />
+                                            <path d="M12 3a9 9 0 0 1 9 9" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                            <path d="M9 10h4M11 8v4" />
+                                        </>
+                                    )}
+                                </svg>
+                            )}
+                        </button>
+                    )}
                     {onReload && (
                         <button
                             onClick={onReload}

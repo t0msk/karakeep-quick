@@ -8,24 +8,6 @@ interface BookmarkItemProps {
 export function BookmarkItem({ bookmark, indentPx = 12 }: BookmarkItemProps) {
     const content = bookmark.content;
     const url = content.url ?? bookmark.url ?? '';
-    const title =
-        bookmark.title ??
-        content.title ??
-        (url
-            ? (() => {
-                  try {
-                      return new URL(url).hostname;
-                  } catch {
-                      return 'Untitled';
-                  }
-              })()
-            : 'Untitled');
-    const favicon = content.favicon;
-
-    function handleClick() {
-        if (url) chrome.tabs.create({ url, active: true });
-    }
-
     const hostname = url
         ? (() => {
               try {
@@ -35,6 +17,16 @@ export function BookmarkItem({ bookmark, indentPx = 12 }: BookmarkItemProps) {
               }
           })()
         : '';
+    const title = bookmark.title ?? content.title ?? (hostname || 'Untitled');
+    const favicon =
+        content.favicon ??
+        (hostname
+            ? `https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(hostname)}`
+            : null);
+
+    function handleClick() {
+        if (url) chrome.tabs.create({ url, active: true });
+    }
 
     return (
         <button

@@ -6,9 +6,20 @@ interface SearchResultsProps {
     isLoading: boolean;
     error: string | null;
     query: string;
+    hasMore: boolean;
+    isLoadingMore: boolean;
+    onLoadMore: () => void;
 }
 
-export function SearchResults({ bookmarks, isLoading, error, query }: SearchResultsProps) {
+export function SearchResults({
+    bookmarks,
+    isLoading,
+    error,
+    query,
+    hasMore,
+    isLoadingMore,
+    onLoadMore,
+}: SearchResultsProps) {
     if (isLoading) {
         return (
             <div>
@@ -72,6 +83,16 @@ export function SearchResults({ bookmarks, isLoading, error, query }: SearchResu
                     <BookmarkItem bookmark={bm} />
                 </div>
             ))}
+            {hasMore && !isLoadingMore && (
+                <button
+                    onClick={onLoadMore}
+                    className="text-[11.5px] text-[var(--text-accent)] opacity-80 hover:opacity-100 text-left transition-opacity duration-150 w-full"
+                    style={{ padding: '6px 12px' }}
+                >
+                    Load more
+                </button>
+            )}
+            {isLoadingMore && <BookmarkSkeleton />}
         </div>
     );
 }
