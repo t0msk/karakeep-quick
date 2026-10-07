@@ -47,21 +47,35 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Bump version
+      - name: Determine version
         id: bump
         env:
           BUMP_INPUT: ${{ github.event.inputs.bump }}
         run: |
-          BUMP_TYPE="${BUMP_INPUT:-patch}"
-          NEW_VERSION=$(npm version "$BUMP_TYPE" --no-git-tag-version)
-          NEW_VERSION="${NEW_VERSION#v}"
-          echo "Bumped version to $NEW_VERSION"
-          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          git fetch --tags origin
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-          # Surgical replace so the rest of manifest.json's formatting (e.g.
-          # inline arrays) is left untouched, instead of round-tripping the
-          # whole file through JSON.parse/stringify.
-          sed -i -E "0,/\"version\": \"[^\"]+\"/s//\"version\": \"${NEW_VERSION}\"/" public/manifest.json
+          if git rev-parse -q --verify "refs/tags/v$CURRENT_VERSION" >/dev/null; then
+            # Current version is already tagged/released — bump to the next one.
+            BUMP_TYPE="${BUMP_INPUT:-patch}"
+            NEW_VERSION=$(npm version "$BUMP_TYPE" --no-git-tag-version)
+            NEW_VERSION="${NEW_VERSION#v}"
+
+            # Surgical replace so the rest of manifest.json's formatting
+            # (e.g. inline arrays) is left untouched, instead of
+            # round-tripping the whole file through JSON.parse/stringify.
+            sed -i -E "0,/\"version\": \"[^\"]+\"/s//\"version\": \"${NEW_VERSION}\"/" public/manifest.json
+
+            echo "bumped=true" >> "$GITHUB_OUTPUT"
+            echo "v$CURRENT_VERSION already tagged — bumped to $NEW_VERSION"
+          else
+            # Nothing tagged at this version yet — ship it as-is.
+            NEW_VERSION="$CURRENT_VERSION"
+            echo "bumped=false" >> "$GITHUB_OUTPUT"
+            echo "v$CURRENT_VERSION not yet tagged — releasing as-is"
+          fi
+
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: npm run build
@@ -76,6 +90,7 @@ jobs:
           echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Commit version bump
+        if: steps.bump.outputs.bumped == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
