@@ -58,13 +58,10 @@ jobs:
           echo "Bumped version to $NEW_VERSION"
           echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
-          node -e "
-            const fs = require('fs');
-            const path = 'public/manifest.json';
-            const manifest = JSON.parse(fs.readFileSync(path, 'utf8'));
-            manifest.version = '$NEW_VERSION';
-            fs.writeFileSync(path, JSON.stringify(manifest, null, 4) + '\n');
-          "
+          # Surgical replace so the rest of manifest.json's formatting (e.g.
+          # inline arrays) is left untouched, instead of round-tripping the
+          # whole file through JSON.parse/stringify.
+          sed -i -E "0,/\"version\": \"[^\"]+\"/s//\"version\": \"${NEW_VERSION}\"/" public/manifest.json
 
       - name: Build
         run: npm run build
