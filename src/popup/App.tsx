@@ -16,6 +16,7 @@ export default function App() {
     const [settings, setSettings] = useState<KarakeepSettings>({
         apiUrl: '',
         apiKey: '',
+        adaptiveHeight: false,
     });
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -96,14 +97,14 @@ export default function App() {
 
     const isSettings = view === 'settings' || view === 'setup';
 
+    const popupHeight = settings.adaptiveHeight
+        ? Math.round(window.screen.availHeight * 0.8)
+        : undefined;
+
     return (
         <div
-            className="flex flex-col bg-[var(--bg-base)] overflow-hidden relative" // pridaj relative
-            style={{
-                width: 'var(--popup-width)',
-                height: 'var(--popup-height)',
-                maxHeight: 'var(--popup-height)', // vynútiť maximum
-            }}
+            className="flex flex-col bg-[var(--bg-base)] overflow-hidden w-full"
+            style={{ height: popupHeight ?? 'var(--popup-height)' }}
         >
             {/* Header — switches between search bar and settings back-button */}
             <Header

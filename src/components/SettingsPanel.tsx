@@ -9,6 +9,7 @@ interface SettingsPanelProps {
 export function SettingsPanel({ onSaved }: SettingsPanelProps) {
     const [apiUrl, setApiUrl] = useState('');
     const [apiKey, setApiKey] = useState('');
+    const [adaptiveHeight, setAdaptiveHeight] = useState(false);
     const [saved, setSaved] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [testing, setTesting] = useState(false);
@@ -18,6 +19,7 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
         getSettings().then((s) => {
             setApiUrl(s.apiUrl);
             setApiKey(s.apiKey);
+            setAdaptiveHeight(s.adaptiveHeight ?? false);
         });
     }, []);
 
@@ -35,7 +37,7 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
             return;
         }
         setError(null);
-        const newSettings = { apiUrl: url, apiKey: key };
+        const newSettings = { apiUrl: url, apiKey: key, adaptiveHeight };
         await saveSettings(newSettings);
         setSaved(true);
         setTimeout(() => {
@@ -76,7 +78,7 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
                         htmlFor="s-apiUrl"
                         className="text-[12px] font-medium text-[var(--text-secondary)]"
                     >
-                        Instance URL
+                        Karakeep Instance URL
                     </label>
                     <input
                         id="s-apiUrl"
@@ -115,7 +117,7 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
                         className="bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-primary)] text-[12.5px] font-mono outline-none w-full transition-all duration-150 placeholder:text-[var(--text-tertiary)] focus:border-[var(--border-strong)] focus:shadow-[0_0_0_3px_var(--accent-glow)]"
                     />
                     <span className="text-[11px] text-[var(--text-tertiary)] leading-relaxed">
-                        Generate in Karakeep → Settings → API Keys
+                        Generate API Key in Karakeep → Settings → API Keys
                     </span>
                 </div>
 
@@ -239,7 +241,41 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
 
             <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
-            {/* Links section */}
+            {/* Appearance section */}
+            <div className="px-4 pt-3 pb-3 flex flex-col gap-2">
+                <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-[var(--text-tertiary)]">
+                    Appearance
+                </p>
+                <button
+                    onClick={() => setAdaptiveHeight((v) => !v)}
+                    className="flex items-center justify-between gap-3 px-0 py-1.5 w-full text-left bg-transparent border-none cursor-pointer group"
+                >
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[12.5px] font-medium text-[var(--text-primary)]">
+                            Adaptive height
+                        </span>
+                        <span className="text-[11px] text-[var(--text-tertiary)] leading-relaxed">
+                            Popup expands to 80% of screen height
+                        </span>
+                    </div>
+                    {/* Toggle switch */}
+                    <div
+                        className="relative shrink-0 w-8 h-[18px] rounded-full transition-colors duration-200"
+                        style={{
+                            background: adaptiveHeight ? 'var(--accent)' : 'var(--border-default)',
+                        }}
+                    >
+                        <div
+                            className="absolute top-[2px] w-[14px] h-[14px] bg-white rounded-full shadow-sm transition-transform duration-200"
+                            style={{
+                                transform: adaptiveHeight ? 'translateX(18px)' : 'translateX(2px)',
+                            }}
+                        />
+                    </div>
+                </button>
+            </div>
+
+            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
             <div className="px-4 pt-3 pb-3 flex flex-col gap-2">
                 <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-[var(--text-tertiary)]">
                     Links
@@ -284,7 +320,7 @@ export function SettingsPanel({ onSaved }: SettingsPanelProps) {
 
             <div className="px-4 py-3 text-center">
                 <span className="text-[11px] text-[var(--text-tertiary)] font-mono">
-                    Karakeep Extension v1.0.0
+                    Karakeep Quick Extension v1.0.0
                 </span>
             </div>
         </div>

@@ -122,10 +122,8 @@
 
     /* ── Popup shell sizing ── */
     html,
-    body,
-    #root {
+    body {
         width: var(--popup-width);
-        height: var(--popup-height);
         overflow: hidden;
         background: var(--bg-base);
         font-family: var(--font-sans);
@@ -133,6 +131,14 @@
         font-size: 13px;
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
+        margin: 0;
+        padding: 0;
+    }
+
+    #root {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
     }
 
     body.settings-page,

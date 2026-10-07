@@ -1,7 +1,0 @@
-body.settings-page {
-    background: var(--bg-base);
-    overflow-y: auto;
-}
-input::placeholder {
-    color: var(--text-tertiary);
-}

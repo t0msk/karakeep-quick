@@ -1,4 +1,5 @@
 export interface KarakeepSettings {
+    adaptiveHeight: boolean;
     apiUrl: string;
     apiKey: string;
 }
