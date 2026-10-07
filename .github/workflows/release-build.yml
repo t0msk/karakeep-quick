@@ -3,6 +3,10 @@ name: Release build
 on:
   push:
     branches: [release]
+    paths-ignore:
+      - '**.md'
+      - LICENSE
+      - .gitignore
   workflow_dispatch:
     inputs:
       bump:
